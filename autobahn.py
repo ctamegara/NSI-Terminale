@@ -40,8 +40,6 @@ class Shift_car(Car) :
         else :
             return (130-self.speed)/(DELTA_T*360)
 
-
-
 class Situation(object) :
     def __init__(self):
         self.list_cars=[]
@@ -84,11 +82,6 @@ def simul(list_events):
     print(len(list_of_previous))
     return list_of_previous
 
-#X=simul([ [Constant_speed_car(0,120) , 0.1]  for _ in range(10) ])
-
-#print([car.position for car in X.list_cars])
-
-
 def visualize_state(list_of_positions,filename) :
     import matplotlib.pyplot as plt
     plt.figure(figsize=(15,2))
@@ -97,8 +90,6 @@ def visualize_state(list_of_positions,filename) :
     plt.axis('off')
     plt.savefig(filename)
     plt.close()
-
-
 
 def visualize(list_of_lists_of_positions,number_of_pics):
     import os
@@ -116,7 +107,6 @@ def visualize(list_of_lists_of_positions,number_of_pics):
             writer.append_data(image)
     for filename in set(filenames):
         os.remove(filename)
-
 
 def example1() :
     List=[ [ Constant_speed_car(0,120) , 0.1 ]  for _ in range(10) ]
