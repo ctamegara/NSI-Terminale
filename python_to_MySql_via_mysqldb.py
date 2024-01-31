@@ -1,23 +1,23 @@
 import MySQLdb
 
 # Un petit code pour remplir une base de données sur pythonanywhere.
-# 
-# Voici comment faire : 
-#  0) Copiez-Collez ce code dans un fichier "python_to_db.py"sur votre 
+#
+# Voici comment faire :
+#  0) Copiez-Collez ce code dans un fichier "python_to_db.py"sur votre
 #     compte Pythonanywhere.
 #  1) Votre base de données doit s'appeler " mydb "
-#  2) DANS LES 2 LIGNES CI-DESSOUS, 
-#     a) insérez votre username à vous (entre tictics ) 
+#  2) DANS LES 2 LIGNES CI-DESSOUS,
+#     a) insérez votre username à vous (entre tictics )
 #        sur pythonanywhere à la place de 'mon_pseudo'
-#     b) insérez lemot de passe de votre base de données 
-#        entre (tictics) à la place de 'bbbbaaaa' 
-#  3) Une fois que c'est fait, cliquez sur RUN ... Vous devez voir 
-#     apparaître dans la console un message disant "c'est fait !" 
-#  4) Vous pouvez alors fermer 
+#     b) insérez lemot de passe de votre base de données
+#        entre (tictics) à la place de 'bbbbaaaa'
+#  3) Une fois que c'est fait, cliquez sur RUN ... Vous devez voir
+#     apparaître dans la console un message disant "c'est fait !"
+#  4) Vous pouvez alors fermer
 
 
-myusername='mon_pseudo'
-mydbpassword='bbbbaaaa'
+myusername='ctamegara'
+mydbpassword='ABGRAabgra'
 
 # --------------------  Connection à mydb
 
@@ -30,21 +30,29 @@ cursor = db.cursor ()
 
 # --------------------  Nettoyage des tables (inutile si tout se passe bien)
 
+tables_list = [ 'Students' , 'Grps' , 'StudGrps' , 'Teachers' , 'Rooms' , 'Slots' , 'EDT' , 'Articles' , 'Friends' ]
+tables_list.reverse()
+print(tables_list)
 def clear_tables() :
-    for z in [ 'StudGroups', 'EDT', 'Students','Groups', 'Rooms', 'Slots', 'Teachers'] :
-        cursor.execute( "DROP TABLE "+z)
+    for z in tables_list :
+        try :
+            cursor.execute( "DROP TABLE "+z)
+            print( f'table {z} dropped' )
+        except :
+            pass
 
-# clear_tables()
+clear_tables()
+db.commit()
 
 # --------------------  Création des tables
 
 cursor.execute ("CREATE TABLE Students(id INT AUTO_INCREMENT, firstname VARCHAR(50), lastname VARCHAR(50), PRIMARY KEY(id))")
-cursor.execute ("CREATE TABLE Groups(id INT AUTO_INCREMENT, name VARCHAR(50), PRIMARY KEY(id))")
-cursor.execute ("CREATE TABLE StudGroups(student_id INT AUTO_INCREMENT, group_id INT, FOREIGN KEY (student_id) REFERENCES Students(id), FOREIGN KEY (group_id) REFERENCES Groups(id))")
+cursor.execute ("CREATE TABLE Grps(  id INT AUTO_INCREMENT, name      VARCHAR(50),                       PRIMARY KEY(id))")
+cursor.execute ("CREATE TABLE StudGrps(student_id INT AUTO_INCREMENT, group_id INT, FOREIGN KEY (student_id) REFERENCES Students(id), FOREIGN KEY (group_id) REFERENCES Grps(id))")
 cursor.execute ("CREATE TABLE Teachers(id INT AUTO_INCREMENT, firstname VARCHAR(50), lastname VARCHAR(50), PRIMARY KEY(id))")
 cursor.execute ("CREATE TABLE Rooms(id INT AUTO_INCREMENT, name VARCHAR(50), PRIMARY KEY(id))")
 cursor.execute ("CREATE TABLE Slots(id INT AUTO_INCREMENT, time_start TIME, time_stop TIME, PRIMARY KEY(id))")
-cursor.execute ("CREATE TABLE EDT(group_id INT, room_id INT, teacher_id INT, slot_id INT, FOREIGN KEY (group_id) REFERENCES Groups(id), FOREIGN KEY (teacher_id) REFERENCES Teachers(id), FOREIGN KEY (slot_id) REFERENCES Slots(id), FOREIGN KEY (room_id) REFERENCES Rooms(id) )")
+cursor.execute ("CREATE TABLE EDT(group_id INT, room_id INT, teacher_id INT, slot_id INT, FOREIGN KEY (group_id) REFERENCES Grps(id), FOREIGN KEY (teacher_id) REFERENCES Teachers(id), FOREIGN KEY (slot_id) REFERENCES Slots(id), FOREIGN KEY (room_id) REFERENCES Rooms(id) )")
 cursor.execute ("CREATE TABLE Articles(student_id INT, text VARCHAR(250), FOREIGN KEY (student_id) REFERENCES Students(id))")
 cursor.execute ("CREATE TABLE Friends(f1_id INT, f2_id INT, FOREIGN KEY (f1_id) REFERENCES Students(id), FOREIGN KEY (f2_id) REFERENCES Students(id))")
 
@@ -65,9 +73,9 @@ Friends=[[1,2],[2,3],[4,5],[6,7],[6,1],[7,8]];
 for x in Studs :
     cursor.execute ("INSERT INTO Students (firstname, lastname) VALUES ('{}','{}')".format(x[0],x[1]))
 for x in Grps :
-    cursor.execute ("INSERT INTO Groups (name) VALUES ('{}')".format(x))
+    cursor.execute ("INSERT INTO Grps (name) VALUES ('{}')".format(x))
 for x in StudGrps :
-    cursor.execute ("INSERT INTO StudGroups (student_id, group_id) VALUES ('{}','{}')".format(x[0],x[1]))
+    cursor.execute ("INSERT INTO StudGrps (student_id, group_id) VALUES ('{}','{}')".format(x[0],x[1]))
 for x in Teachs :
     cursor.execute ("INSERT INTO Teachers (firstname, lastname) VALUES ('{}','{}')".format(x[0],x[1]))
 for x in Rooms :
@@ -89,4 +97,3 @@ db.close()
 
 # --------------------  certif
 print(" c'est fait ! Allez voir votre base de données ! ")
-
