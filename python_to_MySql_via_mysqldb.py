@@ -16,8 +16,8 @@ import MySQLdb
 #  4) Vous pouvez alors fermer
 
 
-myusername='ctamegara'
-mydbpassword='ABGRAabgra'
+myusername='mon_pseudo'
+mydbpassword='bbbbaaaa'
 
 # --------------------  Connection à mydb
 
